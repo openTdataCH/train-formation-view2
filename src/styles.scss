@@ -1,0 +1,235 @@
+/**
+ * @fileoverview Global Styles for SKI+ Train Formation Visualization
+ * 
+ * This file establishes the foundation for application-wide styling including:
+ * - SBB Angular component base imports and typography system
+ * - SKI+ Blue Theme overrides with custom color palette
+ * - Global element styles for consistent cross-browser appearance
+ * - Custom scrollbar themes using OverlayScrollbars
+ * - Responsive typography and layout foundations
+ * - SVG rendering optimizations for crisp visualization graphics
+ * 
+ * The styling system customizes SBB Angular components specifically for
+ * the SKI+ Train Formation Visualization while maintaining design consistency.
+ */
+
+// === EXTERNAL IMPORTS ===
+@use '@sbb-esta/angular/typography';
+@use '@sbb-esta/angular/fullfont';
+@import 'overlayscrollbars/overlayscrollbars.css';
+
+// === CSS CUSTOM PROPERTIES ===
+:root {
+  // SKI+ Blue Theme Overrides
+  --sbb-color-call-to-action: #2d327d;
+  --sbb-color-call-to-action-hover: #1c2055;
+  --sbb-color-red: #2d327d;
+  --sbb-color-red-125: #1c2055;
+  --sbb-color-red-150: #141842;
+  --sbb-focus-outline-color: #2d327d;
+  
+  // Custom Application Colors
+  --ski-color-locomotive: rgb(234, 234, 241);
+  
+  // Component Scaling Fix for Large Displays
+  &, 
+  &:where(:not(.sbb-lean)) {
+    --sbb-scaling-factor: 1;
+  }
+}
+
+// === GLOBAL BASE STYLES ===
+body, 
+html {
+  background-color: var(--sbb-color-white);
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+// === CUSTOM TYPOGRAPHY SYSTEM ===
+.sbb-headline2 {
+  font-size: 24px;
+  font-family: var(--sbb-font-roman);
+  margin-top: 0;
+  margin-bottom: 16px;
+  color: var(--sbb-color-charcoal);
+  
+  // Responsive scaling for mobile devices
+  @media (max-width: 387px) {
+    font-size: 22px;
+  }
+
+  @media (max-width: 346px) {
+    font-size: 20px;
+  }
+  
+  @media (max-width: 342px) {
+    font-size: 19px;
+  }
+}
+
+.sbb-headline3 {
+  font-size: 18px;
+  font-family: var(--sbb-font-light);
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: var(--sbb-color-charcoal);
+  
+  // Responsive scaling for mobile devices
+  @media (max-width: 370px) {
+    font-size: 17px;
+  }
+  
+  @media (max-width: 320px) {
+    font-size: 17px;
+  }
+}
+
+// === SKI+ BRANDING ===
+.ski-plus-brand {
+  color: var(--sbb-color-blue);
+  font-weight: 700;
+}
+
+// === SBB ALERT COMPONENT CUSTOMIZATIONS ===
+.sbb-alert:not(.train-formation-container .sbb-alert) {
+  border-radius: 4px;
+  padding: 16px;
+  
+  // Info Alert Styling
+  &[type="info"] {
+    background-color: var(--sbb-color-cloud);
+    color: var(--sbb-color-charcoal);
+    
+    :is(a, a:is(:hover, :focus)) {
+      color: var(--sbb-color-blue);
+    }
+    
+    .sbb-alert-icon {
+      color: var(--sbb-color-blue);
+    }
+    
+    .sbb-alert-close-button {
+      color: var(--sbb-color-charcoal);
+    }
+    
+    .sbb-alert-close-button-icon {
+      border-color: var(--sbb-color-charcoal);
+    }
+  }
+  
+  // Warning Alert Styling
+  &[type="warning"] {
+    background-color: var(--sbb-color-milk-warning);
+    color: var(--sbb-color-charcoal);
+    
+    .sbb-alert-icon {
+      color: var(--sbb-color-autumn);
+    }
+    
+    .sbb-alert-close-button {
+      color: var(--sbb-color-charcoal);
+    }
+    
+    .sbb-alert-close-button-icon {
+      border-color: var(--sbb-color-charcoal);
+    }
+  }
+  
+  // Error Alert Styling
+  &[type="error"] {
+    background-color: var(--sbb-color-milk-error);
+    color: var(--sbb-color-charcoal);
+    
+    .sbb-alert-icon {
+      color: var(--sbb-color-red);
+    }
+    
+    .sbb-alert-close-button {
+      color: var(--sbb-color-charcoal);
+    }
+    
+    .sbb-alert-close-button-icon {
+      border-color: var(--sbb-color-charcoal);
+    }
+  }
+}
+
+// Alert Content Spacing
+.sbb-alert-content {
+  margin: 0 12px;
+}
+
+// Alert Icon Styling
+.sbb-alert-icon {
+  color: var(--sbb-color-blue);
+  flex: 0 0 var(--sbb-icon-size-default);
+}
+
+// === SVG RENDERING OPTIMIZATION ===
+svg, 
+image, 
+path, 
+rect, 
+circle, 
+line, 
+polyline, 
+polygon, 
+ellipse, 
+text, 
+use {
+  shape-rendering: geometricPrecision;
+  image-rendering: optimizeQuality;
+  text-rendering: optimizeLegibility;
+}
+
+// === OVERLAY SCROLLBARS THEMES ===
+
+// Main Body Scrollbar Theme
+.os-theme-ski-body {
+  --os-size: 10px;
+  --os-padding-perpendicular: 2px;
+  --os-padding-axis: 2px;
+  --os-track-bg: transparent;
+  --os-track-bg-hover: transparent;
+  --os-track-bg-active: transparent;
+  --os-track-border-radius: 6px;
+  --os-handle-bg: var(--sbb-color-blue);
+  --os-handle-bg-hover: var(--sbb-color-blue);
+  --os-handle-bg-active: var(--sbb-color-blue);
+  --os-handle-border-radius: 6px;
+  --os-handle-min-size: 30px;
+  --os-handle-perpendicular-size: 100%;
+  --os-handle-perpendicular-size-hover: 100%;
+}
+
+// Horizontal Scrollbar Themes
+.os-theme-ski-tabs,
+.os-theme-ski-wagons {
+  --os-size: 6px;
+  --os-padding-perpendicular: 1px;
+  --os-padding-axis: 1px;
+  --os-track-bg: transparent;
+  --os-track-bg-hover: transparent;
+  --os-track-bg-active: transparent;
+  --os-track-border-radius: 3px;
+  --os-handle-bg: var(--sbb-color-white);
+  --os-handle-bg-hover: var(--sbb-color-blue);
+  --os-handle-bg-active: var(--sbb-color-blue);
+  --os-handle-border-radius: 3px;
+  --os-handle-min-size: 30px;
+  --os-handle-perpendicular-size: 100%;
+  --os-handle-perpendicular-size-hover: 100%;
+}
+
+// Scrollbar Positioning
+.os-theme-ski-body.os-scrollbar-vertical {
+  top: 78px !important;
+  height: calc(100% - 102px) !important;
+  right: 2.5px !important;
+}
+
+.os-theme-ski-wagons.os-scrollbar-horizontal {
+  bottom: 3px !important;
+}

@@ -1,0 +1,145 @@
+/**
+ * @fileoverview Root Application Component Styles
+ * 
+ * This file handles the main application layout including:
+ * - Page container with adaptive flex layout system
+ * - Responsive container with dynamic padding calculations
+ * - Dynamic spacing system for optimal train formation scrolling
+ * - Footer positioning and responsive typography
+ * - State-dependent layout transitions between search and results views
+ */
+
+// === GLOBAL BASE STYLES ===
+body {
+  background-color: var(--sbb-color-white);
+  margin: 0;
+  min-height: 100vh;
+}
+
+// === PAGE LAYOUT SYSTEM ===
+.page-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  // Initial State: Footer positioned at bottom
+  &:not(.has-formation) {
+    justify-content: space-between;
+    
+    .content {
+      flex: 0 0 auto;
+    }
+    
+    .dynamic-spacing {
+      display: none;
+    }
+  }
+
+  // Results State: Allow dynamic spacing control
+  &.has-formation {
+    justify-content: flex-start;
+    
+    .content {
+      flex: 1 0 auto;
+    }
+  }
+}
+
+// === CONTENT AREAS ===
+.content {
+  display: flex;
+  flex-direction: column;
+}
+
+// === MAIN CONTAINER ===
+.train-view-container {
+  padding: 24px;
+  padding-top: calc(var(--sbb-header-lean-height) + 24px);
+  max-width: 1198px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+  
+  // Responsive padding adjustments
+  @media (max-width: 370px) {
+    padding: 20px;
+    padding-top: calc(var(--sbb-header-lean-height) + 20px);
+  }
+  
+  @media (max-width: 320px) {
+    padding: 16px;
+    padding-top: calc(var(--sbb-header-lean-height) + 16px);
+  }
+}
+
+// === VISUALIZATION SECTION ===
+.visualization-section {
+  display: flex;
+  flex-direction: column;
+  margin-top: 24px;
+  gap: 24px;
+
+  // Large screen optimizations
+  @media (min-width: 992px) {
+    app-train-formation {
+      flex: 1;
+    }
+  }
+  
+  // Mobile spacing adjustments
+  @media (max-width: 370px) {
+    margin-top: 20px;
+    gap: 20px;
+  }
+  
+  @media (max-width: 320px) {
+    margin-top: 16px;
+    gap: 16px;
+  }
+}
+
+// === DYNAMIC SPACING SYSTEM ===
+.dynamic-spacing {
+  width: 100%;
+  transition: height 0.3s ease-out;
+  pointer-events: none;
+}
+
+// === FOOTER COMPONENT ===
+.footer {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 24px;
+  margin-top: 0;
+  
+  p {
+    margin: 0;
+    color: var(--sbb-form-label-color);
+    font-family: var(--sbb-font-standard);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  a {
+    color: var(--sbb-color-blue);
+    text-decoration: none;
+    vertical-align: baseline;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  
+  // Responsive footer adjustments
+  @media (max-width: 370px) {
+    padding: 20px;
+  }
+  
+  @media (max-width: 320px) {
+    padding: 16px;
+    
+    p {
+      font-size: 13px;
+    }
+  }
+}

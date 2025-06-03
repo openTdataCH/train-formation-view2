@@ -1,0 +1,320 @@
+<div class="train-formation-container" *ngIf="hasSearched">
+  <div class="title-container">
+    <h2 class="sbb-headline2">Train Formation</h2>
+    <div class="train-number-badge" *ngIf="trainFormation && !loading">
+      <div class="icon-container">
+        <sbb-icon svgIcon="train-extra-small"></sbb-icon>
+      </div>
+      {{ trainFormation.trainNumber }}
+    </div>
+  </div>
+  
+  <div class="status-container" *ngIf="loading || apiError || (!trainFormation && !loading && !apiError)">
+    <div *ngIf="loading" class="loading-indicator">
+      <sbb-loading-indicator></sbb-loading-indicator>
+    </div>
+    
+    <div *ngIf="apiError" class="error-message">
+      <sbb-alert type="warning" (dismissed)="dismissError()">
+        {{ apiError.message }}
+      </sbb-alert>
+    </div>
+    
+    <div *ngIf="!trainFormation && !loading && !apiError" class="no-data-message">
+      <sbb-alert type="info">
+        No train formation data available. Please check your search parameters.
+      </sbb-alert>
+    </div>
+  </div>
+  
+  <div *ngIf="trainFormation && !loading" class="train-visualization">
+    <div class="train-header">
+      <div class="train-info">
+        <div class="train-route" *ngIf="trainFormation.stops && trainFormation.stops.length > 0">
+          {{ getFirstValidStopName() }} → {{ getLastValidStopName() }}
+        </div>
+        <div class="train-date">
+          <sbb-icon class="date-icon" svgIcon="calendar-small"></sbb-icon>
+          <span>{{ formatDate(trainFormation.operationDate) }}</span>
+        </div>
+      </div>
+      <div class="train-meta"></div>
+    </div>
+    
+    <div class="stop-selector" *ngIf="trainFormation.stops && trainFormation.stops.length > 0">
+      <div overlay-scrollbars 
+           [options]="stopTabsScrollOptions" 
+           [defer]="true"
+           class="stop-selector-tabs-wrapper">
+      <div class="stop-selector-tabs">
+        <ng-container *ngFor="let stop of trainFormation.stops; let i = index; trackBy: trackStopByIndex">
+          <div class="stop-tab" 
+               [class.active]="i === selectedStopIndex"
+               (click)="selectStop(i)"
+               (keydown.enter)="selectStop(i)"
+               (keydown.space)="selectStop(i)"
+               tabindex="0"
+               role="button"
+               [attr.aria-label]="'Select stop ' + stop.name"
+               *ngIf="stop.name !== null">
+            {{ stop.name }}
+          </div>
+        </ng-container>
+        </div>
+      </div>
+      
+      <div class="stop-details" *ngIf="trainFormation.stops[selectedStopIndex]">
+        <span *ngIf="trainFormation.stops[selectedStopIndex].track">
+          <sbb-icon svgIcon="platform-small"></sbb-icon> 
+          <strong>Track:</strong> {{ trainFormation.stops[selectedStopIndex].track }}
+        </span>
+        <span *ngIf="trainFormation.stops[selectedStopIndex].travelDirection !== 'unknown'"
+              class="hide-on-small-screen">
+          <sbb-icon [svgIcon]="'arrow-' + trainFormation.stops[selectedStopIndex].travelDirection + '-extra-small'"></sbb-icon>
+          <strong>Travel Direction</strong>
+        </span>
+        <span *ngIf="trainFormation.stops[selectedStopIndex].arrivalTime" 
+             [class.hide-on-small-screen]="trainFormation.stops[selectedStopIndex].departureTime !== null"
+             class="arrival-time">
+          <sbb-icon svgIcon="clock-extra-small"></sbb-icon> 
+          <strong>Arrival:</strong> {{ trainFormation.stops[selectedStopIndex].arrivalTime | date:'HH:mm' }}
+        </span>
+        <span *ngIf="trainFormation.stops[selectedStopIndex].departureTime" 
+             class="departure-time">
+          <sbb-icon svgIcon="clock-extra-small"></sbb-icon> 
+          <strong>Departure:</strong> {{ trainFormation.stops[selectedStopIndex].departureTime | date:'HH:mm' }}
+        </span>
+      </div>
+    </div>
+    
+    <div overlay-scrollbars 
+         [options]="wagonScrollOptions" 
+         [defer]="true"
+         class="formation-display">
+
+      
+      <div class="visualization-container">
+        <div class="sector-line-container" [class.hidden]="!trainFormation.stops[selectedStopIndex].hasSectors">
+          <div class="sector-line" [style.width.px]="getTotalTrainWidth()">
+            <ng-container *ngIf="trainFormation.stops[selectedStopIndex].hasSectors">
+              <ng-container *ngFor="let section of trainFormation.sections; let i = index; let isLast = last; let isFirst = first">
+                <div class="sector-marker" 
+                    [ngClass]="getSectorClasses(section)" 
+                    [style.width.px]="getSectorWidth(section)">
+                </div>
+              </ng-container>
+              
+              <ng-container *ngFor="let section of trainFormation.sections; let i = index">
+                <div class="sector-label" 
+                     [style.left.px]="getSectorMidpoint(i)">
+                  <img [src]="getSectorSvgPath(section.sector)" alt="Sector {{section.sector}}" class="sector-icon">
+                </div>
+              </ng-container>
+              
+              <ng-container *ngFor="let section of trainFormation.sections; let i = index; let isLast = last">
+                <div *ngIf="i === 0" class="sector-boundary boundary-line"
+                     [style.left.px]="1"></div>
+                
+                <div *ngIf="i > 0" class="sector-boundary boundary-line" 
+                     [style.left.px]="getExactSectorBoundaryPosition(i)"></div>
+                
+                <div *ngIf="isLast" class="sector-boundary boundary-line"
+                     [style.left.px]="getTotalTrainWidth() - 1"></div>
+              </ng-container>
+              
+              <div class="sector-horizontal-line" [style.width.px]="getTotalTrainWidth()"></div>
+            </ng-container>
+          </div>
+        </div>
+        
+        <div class="train-wagons-container">
+          <div class="train-wagons">
+            <ng-container *ngFor="let wagon of getAllWagons(); let i = index; let isLast = last">
+              <div class="wagon-container" 
+                   [ngClass]="getWagonClasses(wagon, i)"
+                   [sbbTooltip]="wagonTooltip" 
+                   sbbTooltipDelay="500"
+                   sbbTooltipTouchGestures="auto">
+                <div *ngIf="wagon.type === 'locomotive'" class="locomotive-container">
+                  <img [src]="getLocomotiveSvgPath()" 
+                       alt="Locomotive" 
+                       class="locomotive-svg"
+                       loading="eager"
+                       decoding="sync"
+                       preserveAspectRatio="none">
+                  <div class="locomotive-text">
+                    <span class="wagon-number">{{ wagon.number }}</span>
+                  </div>
+                </div>
+                
+                <div *ngIf="wagon.type !== 'locomotive'" 
+                     class="wagon-container-inner"
+                     [class.mixed-class]="wagon.classes.includes('1') && wagon.classes.includes('2')">
+                  <img [src]="getWagonSvgPath(wagon, i)" 
+                       alt="Wagon" 
+                       class="wagon-svg"
+                       loading="eager"
+                       decoding="sync"
+                       preserveAspectRatio="none">
+
+                  <div class="wagon-text">
+                    <span class="wagon-number">{{ wagon.number }}</span>
+
+                    <ng-container *ngIf="!(wagon.statusCodes && wagon.statusCodes.includes('Closed'))">
+                      <ng-container *ngIf="wagon.classes.includes('1') && wagon.classes.includes('2')">
+                        <span class="wagon-class">1/2</span>
+                      </ng-container>
+                      <ng-container *ngIf="!(wagon.classes.includes('1') && wagon.classes.includes('2'))">
+                        <ng-container *ngFor="let cls of wagon.classes; let idx = index">
+                          <span class="wagon-class">{{ cls }}</span>
+                        </ng-container>
+                      </ng-container>
+                    </ng-container>
+                  </div>
+                  
+                  <div class="wagon-icons" *ngIf="wagon.type !== 'locomotive' && !(wagon.statusCodes && wagon.statusCodes.includes('Closed'))">
+                    <img *ngIf="wagon.firstClassOccupancy && (wagon.classes.includes('1') && wagon.classes.includes('2'))"
+                         [src]="getOccupancyIconPath(wagon.firstClassOccupancy.icon)" 
+                         [alt]="'First class occupancy: ' + wagon.firstClassOccupancy.label"
+                         loading="eager"
+                         class="occupancy-icon" />
+                    
+                    <img *ngIf="wagon.firstClassOccupancy && wagon.classes.includes('1') && !wagon.classes.includes('2')"
+                         [src]="getOccupancyIconPath(wagon.firstClassOccupancy.icon)" 
+                         [alt]="'First class occupancy: ' + wagon.firstClassOccupancy.label"
+                         loading="eager"
+                         class="occupancy-icon" />
+                    
+                    <img *ngIf="wagon.secondClassOccupancy && wagon.classes.includes('2') && !wagon.classes.includes('1')"
+                         [src]="getOccupancyIconPath(wagon.secondClassOccupancy.icon)" 
+                         [alt]="'Second class occupancy: ' + wagon.secondClassOccupancy.label"
+                         loading="eager"
+                         class="occupancy-icon" />
+                  </div>
+                  
+                  <img *ngIf="wagon.type !== 'locomotive' && !(wagon.statusCodes && wagon.statusCodes.includes('Closed'))"
+                       [src]="getEntryIconPath(wagon)" 
+                       [alt]="hasLowFloorEntry(wagon) ? 'Low floor entry available' : 'Entry with steps'"
+                       loading="eager"
+                       class="entry-icon" />
+                </div>
+                
+                <div class="wagon-attributes-badge" *ngIf="hasWagonPictograms(wagon) && wagon.type !== 'locomotive'">
+                  <ng-container *ngFor="let attrCode of getWagonPictogramAttributes(wagon)">
+                    <img [src]="getAttributePictogramPath(attrCode)" 
+                         [alt]="attrCode" 
+                         class="wagon-attribute-pictogram">
+                  </ng-container>
+                </div>
+                  
+                <ng-template #wagonTooltip>
+                  <div class="wagon-tooltip">
+                    <ng-container *ngIf="wagon.type === 'locomotive'">
+                      <h4>Locomotive</h4>
+                    </ng-container>
+                    
+                    <ng-container *ngIf="wagon.type !== 'locomotive'">
+                      <h4>{{ (wagon.statusCodes && wagon.statusCodes.includes('Closed')) ? 'Closed Coach' : wagon.typeLabel }}</h4>
+                      <div *ngIf="wagon.number">
+                        <strong>Car Number:</strong> {{ wagon.number }}
+                      </div>
+                      <!-- Show class information only for non-closed wagons -->
+                      <div *ngIf="wagon.classes.length > 0 && !(wagon.statusCodes && wagon.statusCodes.includes('Closed'))">
+                        <strong>Class:</strong> 
+                        <span *ngFor="let cls of wagon.classes; let last = last">
+                          {{ cls }}{{ !last ? '/' : '' }}
+                        </span> class
+                      </div>
+                      <div *ngIf="wagon.statusCodes && wagon.statusCodes.length > 0 && 
+                                 !(wagon.statusCodes.length === 1 && wagon.statusCodes.includes('Open but unserviced'))">
+                        <strong>Status:</strong>
+                        <span *ngFor="let status of wagon.statusCodes; let last = last">
+                          <ng-container *ngIf="status !== 'Open but unserviced'">
+                            {{ status }}{{ !last ? ', ' : '' }}
+                          </ng-container>
+                        </span>
+                      </div>
+                      
+                      <div *ngIf="!(wagon.statusCodes && wagon.statusCodes.includes('Closed'))">
+                        <strong>Accessibility:</strong>
+                        <ul>
+                          <li>
+                            <img [src]="getEntryIconPath(wagon)" class="tooltip-icon accessibility-icon" [alt]="hasLowFloorEntry(wagon) ? 'Low Floor Entry' : 'Entry with Steps'">
+                            <span>{{ hasLowFloorEntry(wagon) ? 'Low Floor Entry' : 'Entry with Steps' }}</span>
+                          </li>
+                        </ul>
+                      </div>
+                      
+                      <div *ngIf="(wagon.firstClassOccupancy || wagon.secondClassOccupancy) && !(wagon.statusCodes && wagon.statusCodes.includes('Closed'))">
+                        <strong>Occupancy:</strong>
+                        <ul>
+                          <!-- For mixed 1/2 class coaches, show only first class occupancy -->
+                          <li *ngIf="wagon.firstClassOccupancy && (wagon.classes.includes('1') && wagon.classes.includes('2'))">
+                            <img [src]="getOccupancyIconPath(wagon.firstClassOccupancy.icon)" class="tooltip-icon" [alt]="wagon.firstClassOccupancy.label">
+                            <span>{{ wagon.firstClassOccupancy.label }}</span>
+                          </li>
+                          <!-- For pure first class coaches -->
+                          <li *ngIf="wagon.firstClassOccupancy && wagon.classes.includes('1') && !wagon.classes.includes('2')">
+                            <img [src]="getOccupancyIconPath(wagon.firstClassOccupancy.icon)" class="tooltip-icon" [alt]="wagon.firstClassOccupancy.label">
+                            <span>{{ wagon.firstClassOccupancy.label }}</span>
+                          </li>
+                          <!-- For pure second class coaches -->
+                          <li *ngIf="wagon.secondClassOccupancy && wagon.classes.includes('2') && !wagon.classes.includes('1')">
+                            <img [src]="getOccupancyIconPath(wagon.secondClassOccupancy.icon)" class="tooltip-icon" [alt]="wagon.secondClassOccupancy.label">
+                            <span>{{ wagon.secondClassOccupancy.label }}</span>
+                          </li>
+                        </ul>
+                      </div>
+                      
+                      <div *ngIf="getWagonPictogramAttributes(wagon).length > 0">
+                        <strong>Facilities:</strong>
+                        <ul>
+                          <li *ngFor="let attrCode of getWagonPictogramAttributes(wagon)">
+                            <img [src]="getAttributePictogramPath(attrCode)" class="tooltip-icon" [alt]="getAttributeLabelByCode(wagon, attrCode)">
+                            <span>{{ getAttributeLabelByCode(wagon, attrCode) }}</span>
+                          </li>
+                        </ul>
+                      </div>
+                      
+                      <div *ngIf="wagon.noAccessToPrevious && i > 0" class="warning">
+                        <span>{{ wagon.noAccessMessage }}</span>
+                      </div>
+                      <div *ngIf="wagon.noAccessToNext && i < getAllWagons().length - 1" class="warning">
+                        <span>{{ wagon.noAccessMessage }}</span>
+                      </div>
+                    </ng-container>
+                  </div>
+                </ng-template>
+              </div>
+              
+              <div *ngIf="!isLast" 
+                  class="wagon-connector" 
+                  [ngClass]="getWagonConnectionClass(wagon, getNextWagon(i))">
+                <img *ngIf="wagon.noAccessToNext || (getNextWagon(i) && getNextWagon(i).noAccessToPrevious)" 
+                     [src]="getNoPassageSvgPath()" 
+                     alt="No passage" 
+                     loading="eager"
+                     class="no-passage-icon">
+              </div>
+            </ng-container>
+          </div>
+        </div>
+        
+        <div class="sector-highlights-container" *ngIf="trainFormation.stops[selectedStopIndex].hasSectors">
+          <ng-container *ngFor="let section of trainFormation.sections; let i = index; let last = last">
+            <div class="sector-highlight" 
+                 [ngClass]="getSectorClasses(section)"
+                 [style.width.px]="getSectorWidth(section)"
+                 [style.left.px]="getSectorPosition(section)">
+            </div>
+          </ng-container>
+          
+          <ng-container *ngFor="let section of trainFormation.sections; let i = index;">
+            <div *ngIf="i > 0" class="sector-divider" 
+                 [style.left.px]="getExactSectorBoundaryPosition(i)"></div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,265 @@
+/**
+ * @fileoverview Train Legend Component Styles
+ * 
+ * This file handles the train formation legend display including:
+ * - Main container with SBB milk background and responsive padding
+ * - Responsive grid layout system for optimal legend item organization
+ * - External SVG integration for train elements with proper scaling
+ * - Theme-aware icon rendering with Dark Reader compatibility
+ * - Specialized styling for different legend categories (wagons, sectors, facilities)
+ * - Mobile-responsive adjustments for optimal readability
+ * 
+ * The legend provides visual explanations for all train formation elements
+ * displayed in the main visualization component.
+ */
+
+// === MAIN CONTAINER ===
+.formation-legend {
+  padding: 24px 24px 8px;
+  background-color: var(--sbb-color-milk);
+  border-radius: 16px;
+
+  // Responsive padding adjustments
+  @media (max-width: 370px) {
+    padding: 20px 20px 8px;
+  }
+  
+  @media (max-width: 320px) {
+    padding: 16px 16px 8px;
+  }
+
+  // === TITLE SYSTEM ===
+  .title-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1px;
+  }
+
+  // === SECTION ORGANIZATION ===
+  .legend-section {
+    margin-bottom: 10px;
+  }
+
+  .legend-section+.legend-section {
+    margin-top: 10px;
+  }
+
+  // === RESPONSIVE GRID LAYOUT ===
+  .legend-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 4px 16px;
+
+    // Mobile optimization for accessibility icons
+    @media (max-width: 591px) {
+      .legend-item:has(img[alt="Low Floor Entry"])+.legend-item:has(img[alt="Entry with Steps"]) {
+        margin-top: -6px;
+      }
+    }
+  }
+
+  // === LEGEND ITEM STYLING ===
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    min-width: 0;
+    margin-bottom: 0;
+    padding: 2px 6px;
+    
+    // Consistent sizing for larger screens
+    @media (min-width: 668px) {
+      width: 240px;
+      flex-grow: 0;
+      flex-shrink: 0;
+    }
+    
+    // Full width utilization on smaller screens
+    @media (max-width: 667px) {
+      min-width: 100%;
+    }
+  }
+}
+
+// === TYPOGRAPHY ===
+.sbb-headline3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: normal;
+  color: var(--sbb-color-metal);
+}
+
+// === EXTERNAL SVG TRAIN ELEMENTS ===
+.legend-locomotive-svg,
+.legend-wagon-svg {
+  width: 50px;
+  height: 25px;
+  shape-rendering: geometricPrecision;
+}
+
+// === SVG CONTAINER SYSTEM ===
+.locomotive-container {
+  width: 50px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.wagon-container-inner {
+  position: relative;
+  width: 50px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.wagon-text {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 50px;
+  height: 25px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.wagon-text .wagon-class {
+  font-size: 11px;
+  font-weight: bold;
+  color: var(--sbb-color-blue);
+  font-family: sans-serif;
+  position: absolute;
+  top: 4.5px;
+  left: 15.5px;
+  text-align: center;
+}
+
+// === TEXT STYLING ===
+.legend-label {
+  color: var(--sbb-color-charcoal);
+  white-space: nowrap;
+  overflow: visible;
+  line-height: 1.2;
+}
+
+// === ICON SYSTEM ===
+.legend-svg-icon {
+  width: 20px;
+  height: 20px;
+  display: block;
+  shape-rendering: geometricPrecision;
+}
+
+// === PICTOGRAM BOX STYLING ===
+.pictogram-box {
+  background-color: var(--sbb-color-white);
+  border-radius: 16px;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.05);
+  height: 28px;
+  border: 1px solid transparent;
+  
+  @media (prefers-color-scheme: dark) {
+    border-color: var(--sbb-color-cloud);
+  }
+  
+  .legend-svg-icon {
+    width: 20px;
+    height: 20px;
+    display: block;
+  }
+}
+
+// === SECTOR FACILITY ICON STYLING ===
+.legend-section:last-child .legend-item img.legend-svg-icon:not(.sector-range img) {
+  background-color: transparent;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+  height: 20px;
+  width: 20px;
+}
+
+// === SECTOR RANGE CONTAINER ===
+.legend-section:last-child .legend-item .sector-range {
+  background-color: var(--sbb-color-white);
+  border-radius: 16px;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.05);
+  height: 28px;
+  margin: 0;
+  gap: 4px;
+  border: 1px solid transparent;
+  
+  @media (prefers-color-scheme: dark) {
+    border-color: var(--sbb-color-cloud);
+  }
+  
+  // Consistent icon sizing within container
+  img.legend-svg-icon {
+    background: none;
+    box-shadow: none;
+    padding: 0;
+    height: 20px;
+    width: 20px;
+  }
+}
+
+.range-separator {
+  font-size: 16px;
+  font-weight: normal;
+  color: var(--sbb-color-charcoal);
+  margin: 0;
+}
+
+// === ACCESSIBILITY ICON EXCEPTIONS ===
+.legend-item img[alt="Low Floor Entry"],
+.legend-item img[alt="Entry with Steps"],
+.legend-item img[alt="No passage between wagons"] {
+  background-color: transparent !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+// === ACCESSIBILITY ICON SIZING ===
+.legend-item img[alt="Low Floor Entry"],
+.legend-item img[alt="Entry with Steps"] {
+  width: 30px !important;
+  height: 30px !important;
+  object-fit: contain;
+}
+
+.pictogram-box img[alt="No passage between wagons"] {
+  width: 18px !important;
+  height: 18px !important;
+}
+
+// === WAGON SECTION SPACING OPTIMIZATION ===
+.legend-section:has(.locomotive-container, .wagon-container-inner) .legend-grid {
+  gap: 2px 16px;
+}
+
+// === MOBILE RESPONSIVE ADJUSTMENTS ===
+@media (max-width: 400px) {
+  .legend-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .legend-label {
+    white-space: normal;
+    line-height: 1.2;
+  }
+}

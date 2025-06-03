@@ -1,0 +1,142 @@
+/**
+ * @fileoverview Header Component Styles
+ * 
+ * This file customizes the SBB Angular header-lean component for SKI+ branding including:
+ * - Custom SKI+ prefix styling with blue accent color
+ * - Theme toggle button positioning and responsive behavior
+ * - SBB component overrides with proper selector targeting
+ * - Mobile-responsive typography and spacing adjustments
+ * - Header border and background customizations
+ * 
+ * Note: Contains authorized modifications to SBB Angular components
+ * with specific selectors for the SKI+ Train Formation Visualization project.
+ */
+
+/* Logo styles removed as requested by SKI+ */
+
+/* Custom header title with SKI+ prefix */
+app-header .sbb-header-lean-label {
+  font-size: 20px;
+  /* Remove any right padding/margin to maximize space for button */
+  padding-right: 0;
+  margin-right: 0;
+}
+
+app-header .sbb-header-lean-label::before {
+  content: "SKI+ ";
+  color: var(--sbb-color-blue);
+  font-family: var(--sbb-font-bold);
+  border-right: 1px solid var(--sbb-color-iron);
+  padding-right: 4px;
+  margin-right: 10px;
+}
+
+/* Override of header background color for custom theme */
+app-header .sbb-header-lean {
+  border-bottom: 2.5px solid var(--sbb-color-blue);
+  background-color: var(--sbb-color-milk);
+}
+
+/* Hide unused SBB components */
+app-header .sbb-header-lean-logo,
+app-header .sbb-header-lean-open-menu,
+app-header .sbb-header-lean-side-menu-container,
+app-header .sbb-header-lean-side-menu-backdrop,
+app-header .sbb-header-lean-menu-trigger,
+app-header .sbb-header-lean-brand {
+  display: none !important;
+}
+
+app-header .sbb-header-lean-container-end {
+  margin-right: 0 !important;
+}
+
+/* Theme toggle button styles */
+app-header sbb-header-icon-actions {
+  /* Position button with consistent distance from right viewport edge */
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+  
+  /* Reduce right margin on small screens */
+  @media (max-width: 370px) {
+    right: 10px;
+  }
+
+  @media (max-width: 360px) {
+    right: 7px;
+  }
+  
+  @media (max-width: 321px) {
+    right: 3px;
+  }
+  
+  button[sbb-frameless-button] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+    position: relative;
+    height: auto;
+    min-height: 40px;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+
+    sbb-icon {
+      width: 30px !important;
+      height: 30px !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      svg {
+        width: 100% !important;
+        height: 100% !important;
+        max-height: 30px !important;
+      }
+    }
+
+    /* Responsive adjustments for mobile devices */
+    @media (max-width: 500px) {
+      padding: 4px;
+      min-height: 36px;
+
+      sbb-icon {
+        width: 28px !important;
+        height: 28px !important;
+
+        svg {
+          max-height: 28px !important;
+        }
+      }
+    }
+  }
+}
+
+/* Ensure header container is properly sized on mobile */
+app-header .sbb-header-lean {
+  @media (max-width: 500px) {
+  
+    .sbb-header-lean-label {
+      font-size: 19px;
+    }
+    
+    .sbb-header-lean-label::before {
+      margin-right: 10px;
+    }
+  }
+
+  /* Reduce title size earlier for better button spacing */
+  @media (max-width: 355px) {
+    .sbb-header-lean-label {
+      font-size: 17px;
+    }
+    
+    .sbb-header-lean-label::before {
+      margin-right: 8px;
+    }
+  }
+}

@@ -1,0 +1,945 @@
+/**
+ * @fileoverview Train Formation Visualization Component Styles
+ * 
+ * This comprehensive stylesheet handles the complex train formation visualization including:
+ * - SBB tooltip positioning and mobile optimizations
+ * - Main container with responsive padding system
+ * - Train header with metadata display and responsive typography
+ * - Interactive stop selector with horizontal scrolling tabs
+ * - Sophisticated sector line visualization with precise positioning
+ * - Train wagon rendering with external SVG integration
+ * - Wagon attribute badges and accessibility icons
+ * - Touch interaction optimizations for mobile devices
+ * - Custom scrollbar integration with OverlayScrollbars
+ * 
+ * The styling system renders train formations with pixel-perfect accuracy
+ * while maintaining responsive behavior across all device sizes.
+ */
+
+// === SBB TOOLTIP SYSTEM ===
+.cdk-overlay-container {
+  .cdk-overlay-connected-position-bounding-box {
+    &[style*="top:"] .sbb-tooltip-panel-below {
+      transform: translateY(20px) !important;
+    }
+  }
+}
+
+// Mobile tooltip positioning
+@media (max-width: 576px) {
+  .cdk-overlay-container {
+    .cdk-overlay-connected-position-bounding-box {
+      &[style*="top:"] .sbb-tooltip-panel-above {
+        transform: translateY(-32px) !important;
+      }
+    }
+  }
+}
+
+// === TOUCH INTERACTION SYSTEM ===
+.wagon-container {
+  touch-action: pan-x pan-y;
+  cursor: pointer;
+}
+
+// === MAIN CONTAINER ===
+.train-formation-container {
+  padding: 24px;
+  padding-bottom: 3px;
+  background-color: var(--sbb-color-milk);
+  border-radius: 16px;
+
+  @media (max-width: 768px) {
+    padding: 24px;
+    padding-bottom: 1px;
+  }
+  
+  // Responsive padding adjustments
+  @media (max-width: 370px) {
+    padding: 20px;
+    padding-bottom: 1px;
+  }
+  
+  @media (max-width: 320px) {
+    padding: 16px;
+    padding-bottom: 1px;
+  }
+}
+
+// === TRAIN HEADER SYSTEM ===
+.title-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+}
+
+.train-number-badge {
+  margin-left: 16px;
+  padding: 4px 9px 4px 8px;
+  background-color: var(--sbb-color-white);
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.05);
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--sbb-color-blue);
+  border-radius: 18px;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  position: relative;
+  top: -7px;
+  border: 1px solid transparent;
+  
+  @media (prefers-color-scheme: dark) {
+    border-color: var(--sbb-color-cloud);
+  }
+  
+  // Responsive scaling for mobile
+  @media (max-width: 380px) {
+    font-size: 18px;
+    padding: 4px 9px 4px 8px;
+    margin-left: 12px;
+    border-radius: 16px;
+  }
+  
+  @media (max-width: 320px) {
+    font-size: 16px;
+    padding: 4px 8px 4px 7px;
+    margin-left: 10px;
+    border-radius: 15px;
+  }
+}
+
+.icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--sbb-color-blue);
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  margin-right: 6px;
+  
+  // Responsive icon scaling
+  @media (max-width: 380px) {
+    width: 22px;
+    height: 22px;
+    margin-right: 6px;
+  }
+  
+  @media (max-width: 320px) {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+  }
+}
+
+.icon-container sbb-icon {
+  font-size: 16px;
+  height: 20px;
+  width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  // Responsive icon sizing
+  @media (max-width: 430px) {
+    font-size: 16px;
+    height: 18px;
+    width: 18px;
+  }
+  
+  @media (max-width: 380px) {
+    font-size: 14px;
+    height: 16px;
+    width: 16px;
+  }
+  
+  @media (max-width: 320px) {
+    font-size: 12px;
+    height: 14px;
+    width: 14px;
+  }
+}
+
+// === STATUS CONTAINER ===
+.status-container {
+  min-height: 120px;
+  margin-bottom: 24px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--sbb-color-milk);
+  border-radius: 4px;
+}
+
+.no-data-message {
+  padding: 24px;
+  text-align: center;
+  color: var(--sbb-color-metal);
+  font-style: italic;
+  width: 100%;
+}
+
+.loading-indicator {
+  padding: 24px;
+  text-align: center;
+  color: var(--sbb-color-blue);
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.train-visualization {
+  margin-top: 0;
+}
+
+// === TRAIN METADATA DISPLAY ===
+.train-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+
+  @media (max-width: 576px) {
+    flex-direction: column;
+  }
+}
+
+.train-info {
+  flex: 1;
+  min-width: 200px;
+}
+
+.train-route {
+  font-size: 16px;
+  color: var(--sbb-color-black);
+}
+
+.train-date {
+  font-size: 16px;
+  color: var(--sbb-color-metal);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: -2.5px;
+  margin-bottom: -2px;
+}
+
+.date-icon {
+  color: var(--sbb-color-blue);
+  font-size: 16px;
+}
+
+.train-meta {
+  text-align: right;
+  color: var(--sbb-color-metal);
+
+  @media (max-width: 576px) {
+    text-align: left;
+  }
+}
+
+// === STOP SELECTOR SYSTEM ===
+.stop-selector {
+  margin-top: -17px;
+
+  @media (max-width: 576px) {
+    margin-top: -33px;
+  }
+}
+
+.stop-selector-tabs-wrapper {
+  border-bottom: 1px solid var(--sbb-color-cloud);
+  margin-bottom: 0;
+  max-width: 100%;
+  width: fit-content;
+  padding-top: 3px;
+  padding-bottom: 0;
+}
+
+.stop-selector-tabs {
+  display: flex;
+  flex-wrap: nowrap;
+  min-width: max-content;
+}
+
+.stop-tab {
+  padding: 8px 16px 4px 16px;
+  margin-bottom: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  border-bottom: 3px solid transparent;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  
+  &.active {
+    border-bottom-color: var(--sbb-color-blue);
+    color: var(--sbb-color-blue);
+  }
+  
+  &:hover:not(.active) {
+    border-bottom-color: var(--sbb-color-smoke);
+  }
+}
+
+.stop-details {
+  padding: 12px 8px;
+  margin-top: -6px;
+  display: flex;
+  gap: 8px;
+  color: var(--sbb-color-metal);
+  font-size: 14px;
+  flex-wrap: wrap;
+  min-height: 48px;
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-right: 8px;
+    height: 24px;
+  }
+
+  sbb-icon {
+    color: var(--sbb-color-blue);
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  @media (max-width: 576px) {
+    padding: 12px 8px;
+    row-gap: 4px;
+  }
+  
+  // Mobile optimization for narrow displays
+  @media (max-width: 345px) {
+    gap: 6px;
+    
+    span {
+      margin-right: 6px;
+      gap: 3px;
+    }
+    
+    sbb-icon {
+      width: 18px;
+      height: 18px;
+    }
+  }
+  
+  @media (max-width: 325px) {
+    gap: 4px;
+    
+    span {
+      margin-right: 4px;
+      gap: 2px;
+    }
+    
+    sbb-icon {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+// === GLOBAL RESET ===
+* {
+  box-sizing: border-box;
+}
+
+// === FORMATION DISPLAY CONTAINER ===
+.formation-display {
+  margin-top: -20px;
+  overflow-x: visible;
+  overflow-y: visible;
+  position: relative;
+  transform: translateZ(0);
+  -webkit-font-smoothing: antialiased;
+  padding: 0;
+  font-size: 0;
+  width: calc(100% - 0.5px);
+}
+
+@media (max-width: 768px) {
+  .formation-display {
+    margin-top: -20px;
+  }
+  
+  .train-header {
+    margin-bottom: 24px;
+  }
+
+  .title-container {
+    margin-bottom: 0;
+  }
+}
+
+// === SECTOR VISUALIZATION SYSTEM ===
+.sector-line {
+  position: relative;
+  height: 40px;
+  margin-bottom: 16px;
+  display: flex;
+  width: fit-content;
+}
+
+.sector-marker {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+  flex-shrink: 0;
+}
+
+.sector-label {
+  position: absolute;
+  bottom: -13px;
+  z-index: 15;
+  pointer-events: none;
+  transform: translateX(-50%);
+  background-color: var(--sbb-color-white);
+  border-radius: 16px;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.05);
+  height: 28px;
+  border: 1px solid transparent;
+  
+  @media (prefers-color-scheme: dark) {
+    border-color: var(--sbb-color-cloud);
+  }
+  
+  .sector-icon {
+    width: 20px;
+    height: 20px;
+    display: block;
+  }
+}
+
+.sector-boundary {
+  position: absolute;
+  bottom: -7px;
+  width: 2px;
+  height: 16px;
+  background-color: var(--sbb-color-blue);
+  z-index: 5;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.sector-n\/a {
+  background-color: transparent;
+}
+
+// === TRAIN WAGON SYSTEM ===
+.train-wagons {
+  display: flex;
+  padding: 0;
+  min-width: max-content;
+  margin-left: 1px;
+  font-size: 0;
+  line-height: 0;
+  letter-spacing: 0;
+  white-space: nowrap;
+  flex-flow: row nowrap;
+  -webkit-font-smoothing: antialiased;
+  transform: translateZ(0);
+  position: relative;
+  overflow-y: visible;
+}
+
+.wagon-container {
+  display: block;
+  margin: 0;
+  padding: 16px 0 0 0;
+  position: relative;
+  width: 100px;
+  height: 50px;
+  flex: 0 0 100px;
+  font-size: 0;
+  letter-spacing: 0;
+  word-spacing: 0;
+  transform: translateZ(0);
+  -webkit-font-smoothing: antialiased;
+  touch-action: pan-x pan-y !important;
+  cursor: pointer;
+}
+
+.wagon-connector {
+  width: 10px;
+  height: 50px;
+  display: block;
+  position: relative;
+  margin: 16px 0 0 0;
+  padding: 0;
+  flex: 0 0 10px;
+  
+  .no-passage-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    z-index: 10;
+  }
+}
+
+.direction-indicator {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  font-size: 14px;
+  color: var(--sbb-color-granite);
+}
+
+// === WAGON ATTRIBUTES SYSTEM ===
+.wagon-attributes {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+  min-height: 24px;
+}
+
+.attribute-group {
+  display: flex;
+  gap: 4px;
+}
+
+.attribute {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  sbb-icon {
+    font-size: 16px;
+    color: var(--sbb-color-black);
+  }
+}
+
+// === WAGON TOOLTIP SYSTEM ===
+.wagon-tooltip {
+  max-width: 300px;
+
+  h4 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 16px;
+    color: var(--sbb-color-blue);
+  }
+
+  ul {
+    margin: 4px 0;
+    padding-left: 8px;
+    list-style: none;
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+  }
+
+  .tooltip-icon {
+    width: 20px;
+    height: 20px;
+    display: block;
+    shape-rendering: geometricPrecision;
+    flex-shrink: 0;
+    min-width: 28px;
+    object-fit: contain;
+    object-position: left center;
+  }
+
+  .tooltip-icon.accessibility-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  // Make occupancy icons in tooltip same size as in wagon visualization
+  .tooltip-icon[src*="occupancy"] {
+    min-width: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .warning {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--sbb-color-red);
+
+    sbb-icon {
+      color: var(--sbb-color-red);
+    }
+  }
+}
+
+// === VISUALIZATION CONTAINER SYSTEM ===
+.visualization-container {
+  position: relative;
+  width: fit-content;
+  min-width: 100%;
+  padding-left: 0;
+  overflow-y: visible;
+  margin-left: 0;
+}
+
+.sector-line-container {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  z-index: 10;
+  margin-bottom: 12px;
+  padding-top: 8px;
+  padding-left: 0;
+
+  &.hidden {
+    height: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    overflow: hidden;
+  }
+}
+
+.sector-horizontal-line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--sbb-color-metal);
+  z-index: 4;
+}
+
+.train-wagons-container {
+  position: relative;
+  width: 100%;
+  margin-top: 20px;
+  z-index: 20;
+  max-width: 100%;
+  padding-left: 0;
+  padding-bottom: 53px;
+  margin-left: 0;
+  touch-action: pan-x pan-y !important;
+  transform: translateZ(0);
+  -webkit-font-smoothing: antialiased;
+}
+
+// === SECTOR HIGHLIGHTS ===
+.sector-highlights-container {
+  position: absolute;
+  top: 54px;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 54px);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.sector-divider {
+  position: absolute;
+  top: 15%;
+  height: 70%;
+  width: 1px;
+  background: linear-gradient(to bottom,
+      transparent,
+      rgba(var(--sbb-color-blue-rgb), 0.15),
+      transparent);
+  z-index: 6;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.boundary-line {
+  position: absolute;
+  bottom: -7px;
+  width: 2px;
+  height: 16px;
+  background-color: var(--sbb-color-blue);
+  border-radius: 1px;
+  z-index: 5;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+// === TEXT ELEMENTS ===
+.wagon-number {
+  font-size: 12px;
+  color: var(--sbb-color-metal);
+  font-family: sans-serif;
+}
+
+.wagon-class {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--sbb-color-blue);
+  font-family: sans-serif;
+}
+
+// === EXTERNAL SVG RENDERING ===
+.locomotive-svg,
+.wagon-svg {
+  width: 100px;
+  height: 50px;
+  display: block;
+  shape-rendering: geometricPrecision;
+}
+
+.locomotive-container,
+.wagon-container-inner {
+  position: relative;
+  width: 100px;
+  height: 50px;
+  display: block;
+}
+
+.locomotive-text,
+.wagon-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.locomotive-text .wagon-number,
+.wagon-text .wagon-number {
+  font-size: 12px;
+  color: var(--sbb-color-metal);
+  font-family: sans-serif;
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.locomotive-text .wagon-class,
+.wagon-text .wagon-class {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--sbb-color-blue);
+  font-family: sans-serif;
+  position: absolute;
+  top: 25px;
+  left: 19.5px;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+
+
+.wagon-icons {
+  position: absolute;
+  top: 14px;
+  left: 36px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wagon-container-inner.mixed-class .wagon-icons {
+  left: 38.5px;
+}
+
+// Edge-case fix: For left sloped wagons with 1/2 class, shift elements 2.5px right for better visibility
+.wagon-container.left-slope .wagon-container-inner.mixed-class .wagon-text .wagon-class {
+  left: 22px; // 19.5px + 2.5px adjustment for left-slope edge case
+}
+
+.wagon-container.left-slope .wagon-container-inner.mixed-class .wagon-icons {
+  left: 41px; // 38.5px + 2.5px adjustment for left-slope edge case with 1/2 class
+}
+
+.wagon-container.left-slope .wagon-container-inner.mixed-class .entry-icon {
+  right: 6.5px; // 9px - 2.5px adjustment for left-slope edge case with 1/2 class
+}
+
+.occupancy-icon {
+  width: 20px;
+  height: 20px;
+  display: block;
+  shape-rendering: geometricPrecision;
+}
+
+.entry-icon {
+  position: absolute;
+  top: 14px;
+  right: 9px;
+  width: 30px;
+  height: 30px;
+  display: block;
+  shape-rendering: geometricPrecision;
+  z-index: 2;
+}
+
+
+
+// === HIGH-QUALITY RENDERING ===
+.train-visualization image,
+.wagon-attribute-pictogram,
+.sector-icon,
+.no-passage-icon {
+  shape-rendering: geometricPrecision;
+  image-rendering: optimizeQuality;
+}
+
+// === ERROR DISPLAY SYSTEM ===
+.error-message {
+  width: 100%;
+  
+  .technical-details {
+    margin-top: 4px;
+    color: var(--sbb-color-granite);
+    font-style: italic;
+  }
+}
+
+// Customized SBB Alert Styling
+.train-formation-container sbb-alert .sbb-alert,
+.train-formation-container .sbb-alert,
+.train-formation-container .error-message .sbb-alert {
+  border-radius: 4px !important;
+  background-color: var(--sbb-color-milk) !important;
+  color: var(--sbb-color-black) !important;
+  
+  .sbb-alert-content {
+    color: var(--sbb-color-black) !important;
+  }
+  
+  .sbb-alert-close-button {
+    color: var(--sbb-color-black) !important;
+    
+    .sbb-alert-close-button-icon {
+      border-color: var(--sbb-color-black) !important;
+    }
+  }
+  
+  :is(a, a:is(:hover, :focus)) {
+    color: var(--sbb-color-black) !important;
+  }
+}
+
+// === WAGON ATTRIBUTE BADGES ===
+.wagon-attributes-badge {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -53px;
+  background-color: var(--sbb-color-white);
+  border-radius: 16px;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  z-index: 25;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.05);
+  height: 28px;
+  border: 1px solid transparent;
+  
+  @media (prefers-color-scheme: dark) {
+    border-color: var(--sbb-color-cloud);
+  }
+}
+
+.wagon-attribute-pictogram {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+// === RESPONSIVE UTILITIES ===
+@media screen and (max-width: 610px) {
+  .hide-on-small-screen {
+    display: none !important;
+  }
+
+  .stop-details {
+    span {
+      display: flex;
+      align-items: center;
+    }
+
+    .arrival-time.hide-on-small-screen {
+      display: none !important;
+    }
+
+    .arrival-time:not(.hide-on-small-screen) {
+      display: flex !important;
+    }
+  }
+}
+
+// === OVERLAY SCROLLBARS INTEGRATION ===
+.train-formation-container .os-scrollbar-horizontal {
+  width: 20% !important;
+  left: 40% !important;
+  right: 40% !important;
+  background-color: white !important;
+  border-radius: 8px !important;
+}
+
+.train-formation-container .stop-selector-tabs-wrapper .os-scrollbar-horizontal {
+  bottom: auto !important;
+}
+
+.train-formation-container .os-scrollbar-horizontal .os-scrollbar-handle {
+  min-width: 30px !important;
+  max-width: 60px !important;
+  background-color: var(--sbb-color-blue) !important;
+  border-radius: 6px !important;
+  
+  &:hover,
+  &:active {
+    background-color: var(--sbb-color-blue) !important;
+  }
+}
+
+.os-theme-ski-wagons.os-scrollbar-horizontal {
+  bottom: 3px !important;
+}
+
+// === iOS TOUCH BEHAVIOR OPTIMIZATION ===
+.train-formation-container {
+  img,
+  .wagon-icons,
+  .wagon-attributes,
+  .attribute,
+  .tooltip-icon {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+    user-select: none;
+  }
+  
+  .occupancy-icon,
+  .entry-icon,
+  .wagon-attribute-pictogram,
+  .locomotive-svg,
+  .wagon-svg,
+  .sector-icon,
+  .no-passage-icon,
+  .tooltip-icon {
+    pointer-events: none;
+  }
+}

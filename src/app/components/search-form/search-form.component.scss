@@ -1,0 +1,221 @@
+/**
+ * @fileoverview Search Form Component Styles
+ * 
+ * This file handles the train formation search interface styling including:
+ * - Form container with SBB milk background and responsive padding
+ * - Adaptive form layout that responds to screen size constraints
+ * - SBB form field customizations with reduced spacing for compact design
+ * - Custom tooltip and icon positioning for enhanced UX
+ * - Comprehensive responsive breakpoint system for mobile optimization
+ * - Button styling with SKI+ color overrides
+ * 
+ * The responsive system ensures optimal layout across all device sizes
+ * while maintaining SBB design system consistency.
+ */
+
+// === MAIN CONTAINER ===
+.search-form-container {
+  padding: 24px 24px 11px;
+  background-color: var(--sbb-color-milk);
+  border-radius: 16px;
+}
+
+// === TYPOGRAPHY ===
+.search-form-container h2.sbb-headline2 {
+  margin-top: 0;
+  margin-bottom: 18px;
+  
+  // Responsive title scaling
+  @media (max-width: 370px) {
+    font-size: 22px;
+  }
+  
+  @media (max-width: 320px) {
+    font-size: 21px;
+  }
+}
+
+// === FORM LAYOUT SYSTEM ===
+.form-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.form-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.button-container {
+  display: flex;
+  align-items: flex-start;
+  margin-top: 19px;
+  padding-bottom: 6px;
+}
+
+// === FORM FIELD STYLING ===
+sbb-form-field {
+  flex: 1;
+  min-width: 277px;
+  position: relative;
+}
+
+// SBB Form Field Spacing Optimization
+sbb-form-field {
+  .sbb-form-field-wrapper {
+    margin-bottom: 0;
+  }
+  
+  .sbb-form-field-label {
+    margin-bottom: 1px;
+  }
+  
+  .sbb-form-field-content {
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+}
+
+// === INPUT ICON SYSTEM ===
+.input-icon-container {
+  position: absolute;
+  right: -2px;
+  top: 61%;
+  transform: translateY(-50%);
+  pointer-events: auto;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+.input-icon-container .info-icon {
+  width: 30px !important;
+  height: 30px !important;
+}
+
+.input-icon-container .info-icon svg {
+  width: 18px !important;
+  height: 18px !important;
+}
+
+// === TOOLTIP STYLING ===
+.sbb-tooltip,
+.cdk-overlay-container .sbb-tooltip,
+.cdk-overlay-pane .sbb-tooltip {
+  font-size: 12px !important;
+  line-height: 1.2 !important;
+  color: var(--sbb-form-label-color) !important;
+}
+
+.sbb-tooltip-content {
+  font-size: 12px !important;
+  line-height: 1.2 !important;
+}
+
+.search-form-container [sbbTooltip] {
+  cursor: help;
+}
+
+// === BUTTON STYLING ===
+.button-container button {
+  min-width: 120px !important;
+  height: 36px;
+}
+
+// SKI+ Button Color Overrides
+.button-container button.sbb-button {
+  background-color: var(--sbb-color-call-to-action) !important;
+  white-space: nowrap;
+  min-width: 120px !important;
+}
+
+.button-container button.sbb-button:not(:disabled):not(.sbb-disabled):is(:hover, :focus) {
+  background-color: var(--sbb-color-call-to-action-hover) !important;
+}
+
+// === RESPONSIVE BREAKPOINT SYSTEM ===
+
+// Large Screens: Button wraps first
+@media (max-width: 1200px) {
+  .button-container {
+    width: 100%;
+    margin-top: 6px;
+  }
+  
+  .form-fields {
+    width: 100%;
+  }
+  
+  .form-row {
+    padding-bottom: 6px;
+  }
+}
+
+// Medium Screens: Third form field wraps
+@media (max-width: 992px) {
+  sbb-form-field:nth-child(3) {
+    width: 100%;
+  }
+}
+
+// Small Screens: All fields stack vertically
+@media (max-width: 768px) {
+  sbb-form-field:nth-child(1),
+  sbb-form-field:nth-child(2) {
+    width: 100%;
+  }
+}
+
+// Button matches form field width
+@media (max-width: 657px) {
+  .button-container button {
+    width: 100% !important;
+  }
+}
+
+// Mobile Optimization
+@media (max-width: 370px) {
+  .search-form-container {
+    padding: 20px 20px 11px;
+  }
+  
+  // Full vertical stacking for optimal mobile experience
+  sbb-form-field {
+    min-width: 0;
+    width: 100%;
+    flex: none;
+  }
+  
+  .form-fields {
+    gap: 6px;
+    flex-direction: column;
+  }
+  
+  .form-row {
+    gap: 6px;
+    flex-direction: column;
+  }
+  
+  .button-container {
+    width: 100%;
+    margin-top: 6px;
+  }
+  
+  .button-container button {
+    width: 100% !important;
+  }
+}
