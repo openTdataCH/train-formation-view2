@@ -158,15 +158,46 @@ export class SearchFormComponent implements OnInit, OnDestroy {
       SearchFormComponent.DATE_FORMAT, 
       SearchFormComponent.LOCALE
     );
+
+    const qs = new URLSearchParams(window.location.search);
     
+    const userTrainNumber = qs.get('number');
+    const trainNumber = userTrainNumber ?? SearchFormComponent.DEFAULT_TRAIN_NUMBER;
+    
+    const operator = (() => {
+      let qsOperator = qs.get('operator');
+      if (qsOperator === null) {
+        return SearchFormComponent.DEFAULT_OPERATOR;  
+      }
+
+      // build a lowercase map that can lookup operator=sbb, operator=SBB, operator=SBBP, etc
+      const mapValueEVU: Record<string, string> = {};
+
+      SearchFormComponent.EVU_OPTIONS.forEach(el => {
+        mapValueEVU[el.label.toLowerCase()] = el.value;
+        mapValueEVU[el.value.toLowerCase()] = el.value;
+      });
+
+      qsOperator = qsOperator.toLowerCase();
+      if (qsOperator in mapValueEVU) {
+        return mapValueEVU[qsOperator];
+      }
+
+      return SearchFormComponent.DEFAULT_OPERATOR;
+    })();
+
     this.searchForm = this.fb.group({
-      evu: [SearchFormComponent.DEFAULT_OPERATOR, Validators.required],
+      evu: [operator, Validators.required],
       operationDate: [todayFormatted, Validators.required],
       trainNumber: [
-        SearchFormComponent.DEFAULT_TRAIN_NUMBER, 
+        trainNumber, 
         [Validators.required, Validators.pattern('[0-9]*')]
       ]
     });
+
+    if (userTrainNumber) {
+      this.onSearch();
+    }
   }
 
   /**
