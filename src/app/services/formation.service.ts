@@ -1296,14 +1296,23 @@ export class FormationService {
             wagon.noAccessMessage = 'No passage to previous coach';
           }
         } else if (isCurrentLocomotive || isPreviousLocomotive) {
-          // Clear no-passage indicators and messages for locomotives
+          // Clear no-passage indicators between locomotives and regular wagons
+          // No passage signs should not be shown when adjacent to locomotives
           if (isCurrentLocomotive) {
             wagon.noAccessToPrevious = false;
             wagon.noAccessMessage = undefined;
+            // Also clear the neighboring wagon's indicator
+            if (previousWagon) {
+              previousWagon.noAccessToNext = false;
+              previousWagon.noAccessMessage = undefined;
+            }
           }
-          if (isPreviousLocomotive) {
+          if (isPreviousLocomotive && !isCurrentLocomotive) {
             previousWagon.noAccessToNext = false;
             previousWagon.noAccessMessage = undefined;
+            // Also clear the current wagon's indicator
+            wagon.noAccessToPrevious = false;
+            wagon.noAccessMessage = undefined;
           }
         }
       }
