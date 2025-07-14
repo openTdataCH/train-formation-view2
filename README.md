@@ -108,11 +108,26 @@ npm --version   # Comes bundled with Node.js
 
 3. **Configure API access** - Register at [OpenTransportData.swiss API Manager](https://api-manager.opentransportdata.swiss/), subscribe to the "Train Formation Service" API, and generate your API key
 
-4. **Set up environment variables**
+4. **Set up local environment file** - Replace `your-api-key-goes-here` with your actual API key from step 3
 
    ```bash
-   # Create environment file
-   echo "API_KEY=your_api_key_here" > .env
+   cat > src/environments/environment.local.ts << 'EOF'
+    /**
+      * Local development environment configuration
+      * IMPORTANT: This file should not be committed to version control.
+      * Add this file to .gitignore to prevent accidental exposure of API keys.
+      */
+    export const environment = {
+        /** Whether the app is running in production mode */
+        production: false,
+        /**
+        * API key for the OpenTransportData Train Formation Servive API
+        * For security reasons, consider moving this to a secure environment variable
+        * or authentication service in production environments.
+        */
+        apiKey: 'your-api-key-goes-here'
+      };
+   EOF
    ```
 
 5. **Start development server**
