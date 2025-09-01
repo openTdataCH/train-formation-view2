@@ -21,12 +21,14 @@
 // === CSS CUSTOM PROPERTIES ===
 :root {
   // SKI+ Blue Theme Overrides
-  --sbb-color-call-to-action: #2d327d;
+  --sbb-color-call-to-action: #18314F;
   --sbb-color-call-to-action-hover: #1c2055;
-  --sbb-color-red: #2d327d;
+  --sbb-color-blue: #18314F;
+  --darkreader-bg--sbb-color-blue: #18314F;
+  --sbb-color-red: #18314F;
   --sbb-color-red-125: #1c2055;
   --sbb-color-red-150: #141842;
-  --sbb-focus-outline-color: #2d327d;
+  --sbb-focus-outline-color: #18314F;
   
   // Custom Application Colors
   --ski-color-locomotive: rgb(234, 234, 241);
