@@ -39,7 +39,7 @@
 
 ## About The Project
 
-This frontend serves as an exploratory prototype demonstrating practical applications for the [formation data - full API endpoint](https://api.opentransportdata.swiss/formation/v1/formations_full) from Open Transport Data Switzerland. The application utilizes the separately licensed [train-view-svg-library](https://github.com/openTdataCH/train-view-svg-library) (CC BY 4.0) to render detailed train visualizations.
+This frontend serves as an exploratory prototype demonstrating practical applications for the [formation data - full API endpoint](https://opentdatach.github.io/api-explorer/formation/#/default/getFormationsV2) from Open Transport Data Switzerland. The application utilizes the separately licensed [train-view-svg-library](https://github.com/openTdataCH/train-view-svg-library) (CC BY 4.0) to render detailed train visualizations.
 
 The visualization helps passengers locate specific coaches, identify where low-floor entry points are available, and understand the overall formation of trains at different stops along a route. Rather than static timetable information, this tool provides dynamic insights into the actual composition and layout of Swiss trains throughout their journeys.
 

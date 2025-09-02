@@ -70,7 +70,7 @@ enum WagonStatus {
   providedIn: 'root'
 })
 export class FormationService {
-  private apiUrl = 'https://api.opentransportdata.swiss/formation/v1/formations_full';
+  private apiUrl = 'https://api.opentransportdata.swiss/formation/v2/formations_full';
   
   // Static constants
   private static readonly WAGON_TYPES = ['1', '2', '12', 'CC', 'FA', 'WL', 'WR', 'W1', 'W2', 'LK', 'D', 'K', 'X'];
