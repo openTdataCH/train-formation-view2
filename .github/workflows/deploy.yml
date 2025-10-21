@@ -47,6 +47,6 @@ jobs:
           cp $DIST_DIR/index.html $DIST_DIR/404.html
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: ${{ env.BUILD_DIR }}
+          path: ${{ env.DIST_DIR }}
       - id: deployment
         uses: actions/deploy-pages@v4
