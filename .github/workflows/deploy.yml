@@ -32,17 +32,21 @@ jobs:
       - name: Build
         # TODO - change after move repos
         run: npm run build -- --base-href=/train-formation-view2/
-      - name: Prepare for deployment
+
+      - name: Setup ENV
         run: |
           DIST_DIR=$(find dist -type d -name "browser" | head -n 1)
           if [ -z "$DIST_DIR" ]; then
             DIST_DIR="dist/train-view"
           fi
+          echo "DIST_DIR=$DIST_DIR" >> $GITHUB_ENV
+      - name: Prepare for deployment
+        run: |
           echo "Using build directory: $DIST_DIR"
           touch $DIST_DIR/.nojekyll
           cp $DIST_DIR/index.html $DIST_DIR/404.html
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: $DIST_DIR
+          path: ${{ env.BUILD_DIR }}
       - id: deployment
         uses: actions/deploy-pages@v4
