@@ -41,5 +41,8 @@ jobs:
           echo "Using build directory: $DIST_DIR"
           touch $DIST_DIR/.nojekyll
           cp $DIST_DIR/index.html $DIST_DIR/404.html
-
-      # More TBA
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: $DIST_DIR
+      - id: deployment
+        uses: actions/deploy-pages@v4
