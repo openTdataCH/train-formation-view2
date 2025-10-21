@@ -2,10 +2,11 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
-  schedule:
-    # Run every day at 00:00 UTC
-    - cron: "0 1 * * *"
+    branches:
+      - main
+      - feature/updates-build
+  # Allows manual trigger
+  workflow_dispatch: 
 
 permissions:
   contents: write
