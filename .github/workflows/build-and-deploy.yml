@@ -1,0 +1,50 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  # Allows manual trigger
+  workflow_dispatch: 
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current repo
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Replace API Key from Secrets
+        run: |
+          sed -i "s/REPLACE_DURING_DEPLOYMENT/${{ secrets.OPENTRANSPORTDATA_API_KEY }}/g" src/environments/environment.prod.ts
+      - name: Build
+        run: npm run build -- --base-href=/train-formation-view/
+
+      - name: Setup ENV
+        run: |
+          DIST_DIR=$(find dist -type d -name "browser" | head -n 1)
+          if [ -z "$DIST_DIR" ]; then
+            DIST_DIR="dist/train-view"
+          fi
+          echo "DIST_DIR=$DIST_DIR" >> $GITHUB_ENV
+      - name: Prepare for deployment
+        run: |
+          echo "Using build directory: $DIST_DIR"
+          touch $DIST_DIR/.nojekyll
+          cp $DIST_DIR/index.html $DIST_DIR/404.html
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ env.DIST_DIR }}
+      - id: deployment
+        uses: actions/deploy-pages@v4

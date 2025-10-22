@@ -178,7 +178,7 @@ export class OccupancyService {
   ): Observable<TrainOccupancy | null> {
     this.loadingSubject.next(true);
     
-    const dataUrl = `/train-formation-view/data/occupancy/${formattedDate}/operator-${operatorId}.json`;
+    const dataUrl = `https://opentdatach.github.io/data/occupancy-forecast-json-dataset/${formattedDate}/operator-${operatorId}.json`;
     
     return this.http.get<OperatorOccupancy>(dataUrl).pipe(
       map(data => {
