@@ -29,7 +29,7 @@ jobs:
         run: |
           sed -i "s/REPLACE_DURING_DEPLOYMENT/${{ secrets.OPENTRANSPORTDATA_API_KEY }}/g" src/environments/environment.prod.ts
       - name: Build
-        run: npm run build -- --base-href=/train-formation-view/
+        run: npm run build -- --base-href=/train-formation-view2/
 
       - name: Setup ENV
         run: |
