@@ -30,8 +30,7 @@ jobs:
         run: |
           sed -i "s/REPLACE_DURING_DEPLOYMENT/${{ secrets.OPENTRANSPORTDATA_API_KEY }}/g" src/environments/environment.prod.ts
       - name: Build
-        # TODO - change after move repos
-        run: npm run build -- --base-href=/train-formation-view2/
+        run: npm run build -- --base-href=/train-formation-view/
 
       - name: Setup ENV
         run: |
