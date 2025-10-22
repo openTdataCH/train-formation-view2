@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - feature/updates-build
   # Allows manual trigger
   workflow_dispatch: 
 
